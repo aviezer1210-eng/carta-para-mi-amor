@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#080812">
+<title>Una carta para ti ❤️</title>
+
+<style>
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    html {
+        scroll-behavior: smooth;
+    }
+
+    body {
+        min-height: 100vh;
+        overflow-x: hidden;
+        font-family: Georgia, "Times New Roman", serif;
+        color: white;
+        background:
+            radial-gradient(circle at 20% 20%, rgba(255, 0, 70, .22), transparent 30%),
+            radial-gradient(circle at 80% 70%, rgba(0, 90, 255, .22), transparent 30%),
+            linear-gradient(135deg, #030308, #09000b 45%, #020713);
+    }
+
+    /* Fondo decorativo */
+    .background-glow {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: -2;
+        background:
+            radial-gradient(circle at 50% 10%, rgba(255, 0, 60, .15), transparent 35%),
+            radial-gradient(circle at 10% 90%, rgba(0, 110, 255, .12), transparent 30%);
+        animation: glow 6s ease-in-out infinite alternate;
+    }
+
+    @keyframes glow {
+        from { opacity: .65; }
+        to { opacity: 1; }
+    }
+
+    /* Corazones y flores */
+    .floating {
+        position: fixed;
+        bottom: -60px;
+        pointer-events: none;
+        z-index: 0;
+        animation: floatUp linear forwards;
+        opacity: .85;
+    }
+
+    @keyframes floatUp {
+        0% {
+            transform: translateY(0) rotate(0deg) scale(.7);
+            opacity: 0;
+        }
+        10% {
+            opacity: .9;
+        }
+        100% {
+            transform: translateY(-115vh) rotate(360deg) scale(1.2);
+            opacity: 0;
+        }
+    }
+
+    .container {
+        width: min(920px, 92%);
+        margin: auto;
+        padding: 55px 0 80px;
+        position: relative;
+        z-index: 2;
+    }
+
+    /* Encabezado */
+    .hero {
+        text-align: center;
+        margin-bottom: 35px;
+        animation: appear 1.2s ease;
+    }
+
+    .small-title {
+        color: #6da8ff;
+        letter-spacing: 5px;
+        text-transform: uppercase;
+        font-size: 12px;
+        margin-bottom: 12px;
+    }
+
+    h1 {
+        font-size: clamp(38px, 9vw, 76px);
+        line-height: .95;
+        color: #fff;
+        text-shadow:
+            0 0 10px rgba(255, 0, 70, .7),
+            0 0 35px rgba(0, 100, 255, .35);
+    }
+
+    h1 span {
+        color: #ff174f;
+    }
+
+    .subtitle {
+        margin: 18px auto 0;
+        max-width: 600px;
+        color: #d5d9e8;
+        font-family: Arial, sans-serif;
+        font-size: 15px;
+        line-height: 1.7;
+    }
+
+    /* Sobre */
+    .envelope-area {
+        display: flex;
+        justify-content: center;
+        margin: 40px 0;
+        perspective: 1000px;
+    }
+
+    .envelope {
+        width: min(560px, 92vw);
+        height: 340px;
+        position: relative;
+        cursor: pointer;
+        transition: transform .4s ease;
+        filter: drop-shadow(0 25px 40px rgba(0,0,0,.55));
+    }
+
+    .envelope:hover {
+        transform: translateY(-8px);
+    }
+
+    .envelope-body {
+        position: absolute;
+        inset: 0;
+        background:
+            linear-gradient(145deg, #09090e, #180810);
+        border: 1px solid rgba(255, 50, 80, .5);
+        border-radius: 18px;
+        box-shadow:
+            inset 0 0 50px rgba(255,0,50,.08),
+            0 0 35px rgba(255,0,50,.12);
+        overflow: hidden;
+    }
+
+    .envelope-body::before,
+    .envelope-body::after {
+        content: "";
+        position: absolute;
+        width: 75%;
+        height: 2px;
+        background: rgba(60,130,255,.35);
+        top: 50%;
+    }
+
+    .envelope-body::before {
+        left: -15%;
+        transform: rotate(30deg);
+    }
+
+    .envelope-body::after {
+        right: -15%;
+        transform: rotate(-30deg);
+    }
+
+    .flap {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 52%;
+        background: linear-gradient(135deg, #260914, #090b19);
+        clip-path: polygon(0 0, 100% 0, 50% 100%);
+        transform-origin: top center;
+        transition: transform 1s cubic-bezier(.2,.8,.2,1);
+        z-index: 5;
+        border-top-left-radius: 18px;
+        border-top-right-radius: 18px;
+        border-top: 1px solid rgba(255,255,255,.08);
+    }
+
+    .seal {
+        position: absolute;
+        left: 50%;
+        top: 44%;
+        transform: translate(-50%, -50%);
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        background: radial-gradient(circle, #ff315c, #9e002a);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 31px;
+        box-shadow:
+            0 0 20px rgba(255,0,60,.65),
+            0 0 50px rgba(255,0,60,.2);
+        z-index: 7;
+        transition: .4s;
+    }
+
+    .letter-preview {
+        position: absolute;
+        left: 7%;
+        width: 86%;
+        bottom: 8%;
+        height: 72%;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #f8f4ef, #fff);
+        color: #1c1014;
+        padding: 25px;
+        text-align: center;
+        z-index: 2;
+        transition: transform 1s cubic-bezier(.2,.8,.2,1);
+    }
+
+    .letter-preview h2 {
+        color: #b90037;
+        margin-bottom: 10px;
+    }
+
+    .letter-preview p {
+        font-family: Arial, sans-serif;
+        color: #44353a;
+        font-size: 13px;
+    }
+
+    .open .flap {
+        transform: rotateX(180deg);
+    }
+
+    .open .seal {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(.3);
+    }
+
+    .open .letter-preview {
+        transform: translateY(-135px);
+    }
+
+    .instruction {
+        text-align: center;
+        font-family: Arial, sans-serif;
+        color: #aab4d1;
+        font-size: 13px;
+        margin-top: 15px;
+    }
+
+    /* Carta */
+    .letter {
+        background:
+            linear-gradient(145deg, rgba(255,255,255,.97), rgba(245,242,239,.98));
+        color: #21141a;
+        border-radius: 24px;
+        padding: clamp(25px, 6vw, 55px);
+        margin-top: 80px;
+        position: relative;
+        box-shadow:
+            0 30px 80px rgba(0,0,0,.5),
+            0 0 50px rgba(255,0,60,.1);
+        border: 1px solid rgba(255, 40, 70, .35);
+        opacity: 0;
+        transform: translateY(40px);
+        transition: 1s ease;
+    }
+
+    .letter.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .letter::before {
+        content: "♥";
+        position: absolute;
+        top: 18px;
+        right: 25px;
+        font-size: 30px;
+        color: #e4003c;
+    }
+
+    .letter::after {
+        content: "✿";
+        position: absolute;
+        bottom: 18px;
+        left: 25px;
+        font-size: 30px;
+        color: #1265d8;
+    }
+
+    .letter h2 {
+        color: #b00036;
+        font-size: clamp(28px, 6vw, 45px);
+        margin-bottom: 25px;
+    }
+
+    .letter p {
+        font-size: 17px;
+        line-height: 1.9;
+        margin-bottom: 18px;
+    }
+
+    .highlight {
+        color: #d1003b;
+        font-weight: bold;
+    }
+
+    /* Botones */
+    .buttons {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin: 35px 0;
+    }
+
+    button {
+        border: none;
+        border-radius: 50px;
+        padding: 14px 22px;
+        font-weight: bold;
+        cursor: pointer;
+        color: white;
+        background: linear-gradient(135deg, #d40042, #6f001f);
+        box-shadow: 0 8px 25px rgba(190,0,50,.3);
+        transition: transform .2s, box-shadow .2s;
+    }
+
+    button:hover {
+        transform: translateY(-3px) scale(1.03);
+        box-shadow: 0 12px 30px rgba(190,0,50,.5);
+    }
+
+    button.blue {
+        background: linear-gradient(135deg, #0877ff, #063d91);
+        box-shadow: 0 8px 25px rgba(0,100,255,.25);
+    }
+
+    /* Mensaje secreto */
+    .secret {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height .8s ease, padding .5s ease;
+        text-align: center;
+        border-radius: 16px;
+        background: linear-gradient(135deg, #090a14, #190712);
+        color: white;
+    }
+
+    .secret.show {
+        max-height: 300px;
+        padding: 25px;
+        margin-top: 20px;
+    }
+
+    .secret h3 {
+        color: #ff3864;
+        margin-bottom: 12px;
+    }
+
+    .secret p {
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+        color: #dfe5f5;
+        margin: 0;
+    }
+
+    /* Galería de flores */
+    .flowers {
+        display: flex;
+        justify-content: center;
+        gap: 25px;
+        margin: 35px 0;
+        flex-wrap: wrap;
+    }
+
+    .flower {
+        width: 70px;
+        height: 70px;
+        position: relative;
+        animation: flowerFloat 3s ease-in-out infinite;
+    }
+
+    .flower:nth-child(2) {
+        animation-delay: .5s;
+    }
+
+    .flower:nth-child(3) {
+        animation-delay: 1s;
+    }
+
+    .petal {
+        position: absolute;
+        width: 31px;
+        height: 45px;
+        border-radius: 50%;
+        left: 20px;
+        top: 12px;
+        background: #e40046;
+        transform-origin: 50% 90%;
+        box-shadow: 0 0 15px rgba(255,0,70,.35);
+    }
+
+    .petal:nth-child(2) { transform: rotate(72deg); }
+    .petal:nth-child(3) { transform: rotate(144deg); }
+    .petal:nth-child(4) { transform: rotate(216deg); }
+    .petal:nth-child(5) { transform: rotate(288deg); }
+
+    .flower:nth-child(2) .petal {
+        background: #0878ff;
+        box-shadow: 0 0 15px rgba(0,100,255,.35);
+    }
+
+    .center {
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        background: #ffd34e;
+        border-radius: 50%;
+        top: 37%;
+        left: 36%;
+        z-index: 2;
+    }
+
+    @keyframes flowerFloat {
+        0%,100% { transform: translateY(0) rotate(-3deg); }
+        50% { transform: translateY(-10px) rotate(3deg); }
+    }
+
+    /* Firma */
+    .signature {
+        text-align: right;
+        margin-top: 35px;
+        font-style: italic;
+        font-size: 22px;
+        color: #a60034;
+    }
+
+    /* Final */
+    .final {
+        text-align: center;
+        margin-top: 60px;
+        padding: 40px 20px;
+        border-radius: 25px;
+        background: rgba(0,0,0,.3);
+        border: 1px solid rgba(40,110,255,.25);
+    }
+
+    .final h2 {
+        font-size: clamp(28px, 6vw, 50px);
+        color: #fff;
+        margin-bottom: 15px;
+    }
+
+    .final h2 span {
+        color: #ff174f;
+    }
+
+    .final p {
+        color: #c8d0e5;
+        font-family: Arial, sans-serif;
+        line-height: 1.7;
+    }
+
+    .heart-big {
+        font-size: 65px;
+        display: block;
+        animation: heartbeat 1.3s infinite;
+        margin-bottom: 10px;
+    }
+
+    @keyframes heartbeat {
+        0%,100% { transform: scale(1); }
+        15% { transform: scale(1.18); }
+        30% { transform: scale(1); }
+        45% { transform: scale(1.12); }
+    }
+
+    .footer {
+        text-align: center;
+        margin-top: 35px;
+        color: #65708d;
+        font-family: Arial, sans-serif;
+        font-size: 11px;
+    }
+
+    @keyframes appear {
+        from {
+            opacity: 0;
+            transform: translateY(25px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Adaptación móvil */
+    @media (max-width: 600px) {
+        .container {
+            padding-top: 35px;
+        }
+
+        .envelope {
+            height: 285px;
+        }
+
+        .letter-preview {
+            padding: 18px;
+        }
+
+        .letter p {
+            font-size: 16px;
+        }
+
+        .open .letter-preview {
+            transform: translateY(-105px);
+        }
+    }
+</style>
+</head>
+
+<body>
+
+<div class="background-glow"></div>
+
+<div id="floating-container"></div>
+
+<main class="container">
+
+    <section class="hero">
+        <div class="small-title">Para alguien especial ❤️</div>
+
+        <h1>
+            Una carta<br>
+            <span>para ti.</span>
+        </h1>
+
+        <p class="subtitle">
+            No es una carta cualquiera... así que toca la carta,
+            ábrela y descubre lo que tengo que decirte. 👀❤️
+        </p>
+    </section>
+
+
+    <!-- SOBRE INTERACTIVO -->
+    <section class="envelope-area">
+
+        <div class="envelope" id="envelope" onclick="openLetter()">
+
+            <div class="envelope-body"></div>
+
+            <div class="letter-preview">
+                <h2>Para ti ❤️</h2>
+                <p>
+                    Hay cosas que se sienten mejor de lo que se explican...
+                    y tú eres una de ellas.
+                </p>
+            </div>
+
+            <div class="flap"></div>
+
+            <div class="seal">
+                ❤️
+            </div>
+
+        </div>
+
+    </section>
+
+    <div class="instruction">
+        👆 Toca el sobre para abrir la carta
+    </div>
+
+
+    <!-- CARTA -->
+    <section class="letter" id="letter">
+
+        <div class="flowers">
+
+            <div class="flower">
+                <div class="petal"></div>
+                <div class="petal"></div>
+                <div class="petal"></div>
+                <div class="petal"></div>
+                <div class="petal"></div>
+                <div class="center"></div>
+            </div>
+
+            <div class="flower">
+                <div class="petal"></div>
+                <div class="petal"></div>
+                <div class="petal"></div>
+                <div class="petal"></div>
+                <div class="petal"></div>
+                <div class="center"></div>
+            </div>
+
+            <div class="flower">
+                <div class="petal"></div>
+                <div class="petal"></div>
+                <div class="petal"></div>
+                <div class="petal"></div>
+                <div class="petal"></div>
+                <div class="center"></div>
+            </div>
+
+        </div>
+
+
+        <h2>Oye, tú... ❤️</h2>
+
+        <p>
+            No sé exactamente qué hiciste conmigo, pero desde que llegaste
+            tienes una forma bastante descarada de quedarte con mi atención.
+            Y lo peor es que <span class="highlight">me encanta.</span>
+        </p>
+
+        <p>
+            Yo intento hacerme el fuerte, hacer como que nada me sorprende,
+            pero apareces tú con esa forma tuya de ser y se me daña el personaje. 😂
+        </p>
+
+        <p>
+            Tienes algo que no sé explicar. Algo que hace que quiera saber
+            de ti, hablar contigo, molestarte un poquito y, siendo completamente
+            sincero...
+            <span class="highlight">tenerte cerquita más de lo que debería admitir. 😏</span>
+        </p>
+
+        <p>
+            Así que sí, esta carta es para decirte que me gustas muchísimo,
+            pero también para recordarte algo:
+            <span class="highlight">
+                contigo no quiero ser normal.
+            </span>
+            Quiero seguir siendo ese que te saca una sonrisa cuando menos
+            te lo esperas.
+        </p>
+
+        <p>
+            Y si llegaste hasta aquí... ya no hay vuelta atrás.
+            Ahora oficialmente tienes una carta que demuestra que
+            alguien piensa demasiado en ti. 👀❤️
+        </p>
+
+
+        <div class="buttons">
+
+            <button onclick="showSecret()">
+                🔐 Tengo algo que confesarte
+            </button>
+
+            <button class="blue" onclick="makeHearts()">
+                ❤️ Mándame corazones
+            </button>
+
+        </div>
+
+
+        <!-- MENSAJE SECRETO -->
+        <div class="secret" id="secret">
+
+            <h3>Confesión desbloqueada 😏</h3>
+
+            <p>
+                Si pudiera elegir una persona con quien pasar un rato,
+                reírme de cualquier tontería y terminar diciendo
+                "qué rápido pasó el tiempo"...
+                probablemente ya sabes quién sería. ❤️
+            </p>
+
+        </div>
+
+
+        <div class="signature">
+            Con cariño...<br>
+            <strong>Alguien que te quiere demasiado ❤️</strong>
+        </div>
+
+    </section>
+
+
+    <!-- FINAL -->
+    <section class="final">
+
+        <span class="heart-big">❤️</span>
+
+        <h2>
+            Y esto apenas es<br>
+            <span>el comienzo.</span>
+        </h2>
+
+        <p>
+            Porque algunas personas llegan a tu vida...
+            y otras llegan para hacerla mucho más bonita.
+        </p>
+
+        <div class="buttons">
+
+            <button onclick="finalSurprise()">
+                ✨ Última sorpresa
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <div class="footer">
+        Hecho con ❤️, un poquito de locura y demasiadas ganas de hacerte sonreír.
+    </div>
+
+</main>
+
+
+<script>
+
+    /* ================================
+       ABRIR LA CARTA
+    ================================= */
+
+    function openLetter() {
+
+        const envelope = document.getElementById("envelope");
+        const letter = document.getElementById("letter");
+
+        envelope.classList.toggle("open");
+
+        setTimeout(() => {
+
+            letter.classList.add("visible");
+
+            letter.scrollIntoView({
+                behavior: "smooth",
+                block: "start"
+            });
+
+        }, 650);
+
+        makeHearts();
+    }
+
+
+    /* ================================
+       MENSAJE SECRETO
+    ================================= */
+
+    function showSecret() {
+
+        const secret = document.getElementById("secret");
+
+        secret.classList.toggle("show");
+
+        if (secret.classList.contains("show")) {
+            makeHearts();
+        }
+    }
+
+
+    /* ================================
+       CORAZONES FLOTANTES
+    ================================= */
+
+    function createFloating(symbol) {
+
+        const item = document.createElement("div");
+
+        item.className = "floating";
+        item.textContent = symbol;
+
+        const size = Math.random() * 20 + 15;
+        const left = Math.random() * 100;
+        const duration = Math.random() * 5 + 5;
+
+        item.style.left = left + "%";
+        item.style.fontSize = size + "px";
+        item.style.animationDuration = duration + "s";
+
+        document.getElementById("floating-container")
+            .appendChild(item);
+
+        setTimeout(() => {
+            item.remove();
+        }, duration * 1000);
+    }
+
+
+    /* Crear decoración automáticamente */
+
+    setInterval(() => {
+
+        const symbols = ["❤️", "💙", "💕", "🌹", "✿", "💗"];
+
+        const random =
+            symbols[Math.floor(Math.random() * symbols.length)];
+
+        createFloating(random);
+
+    }, 700);
+
+
+    /* ================================
+       EXPLOSIÓN DE CORAZONES
+    ================================= */
+
+    function makeHearts() {
+
+        const symbols = ["❤️", "💙", "💕", "💗", "💖", "🌹"];
+
+        for (let i = 0; i < 35; i++) {
+
+            setTimeout(() => {
+
+                const random =
+                    symbols[Math.floor(Math.random() * symbols.length)];
+
+                createFloating(random);
+
+            }, i * 50);
+        }
+    }
+
+
+    /* ================================
+       SORPRESA FINAL
+    ================================= */
+
+    function finalSurprise() {
+
+        makeHearts();
+
+        setTimeout(() => {
+
+            alert(
+                "❤️ Si llegaste hasta aquí...\n\n" +
+                "solo quería decirte que eres alguien muy especial para mí. " +
+                "Y sí... probablemente volvería a elegirte. 😏❤️"
+            );
+
+        }, 900);
+    }
+
+
+    /* ================================
+       EFECTO AL CARGAR
+    ================================= */
+
+    window.addEventListener("load", () => {
+
+        for (let i = 0; i < 12; i++) {
+
+            setTimeout(() => {
+
+                const symbols = ["❤️", "💙", "✿", "🌹"];
+
+                createFloating(
+                    symbols[Math.floor(Math.random() * symbols.length)]
+                );
+
+            }, i * 180);
+
+        }
+
+    });
+
+</script>
+
+</body>
+</html>
